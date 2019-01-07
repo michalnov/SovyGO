@@ -1,4 +1,4 @@
-package server
+package configuration
 
 import (
 	"encoding/json"
@@ -48,28 +48,59 @@ type external struct {
 	Address string `json:"address,omitempty"`
 }
 
-//InitializeDb produce strings for acces to database
-func InitializeDb() (string, string, error) {
+func readConfig() (config, error) {
+	out := config{}
 	absPath, _ := filepath.Abs("config/config.json")
 	fmt.Println("Database Opening configuration File")
 	temFile, err := ioutil.ReadFile(absPath)
 	if err != nil {
 		fmt.Println("Reading Db config failed")
-		return "", "", err
+		return out, err
 	}
-	conf := DbConf{}
-	err = json.Unmarshal(temFile, &conf)
+	err = json.Unmarshal(temFile, &out)
 	if err != nil {
-		fmt.Println("Unmarshal Db config failed")
+		fmt.Println("Unmarshal config failed")
+		return out, err
+	}
+	return out, nil
+}
+
+//InitializeDb produce strings for acces to database
+func InitializeDb() (string, string, error) {
+	conf, err := readConfig()
+	if err != nil {
 		return "", "", err
 	}
-	primaryString := ""
-	logString := ""
-	primaryString = conf.DbUser + ":" + conf.DbPassword + "@tcp(" + conf.DbAddress + ":" + conf.DbPort + ")/" + conf.DbName
-	if conf.LogDb {
+	master := ""
+	slave := ""
+	master = buildDbString(conf.Database.Master)
+	if conf.Database.Slave.Active {
 		fmt.Println("LOG status: active")
-		logString = conf.LogDbUser + ":" + conf.LogDbPassword + "@tcp(" + conf.LogDbAddress + ":" + conf.LogDbPort + ")/" + conf.LogDbName
+		slave = buildDbString(conf.Database.Slave)
 	}
 	fmt.Println("Database setup: succes")
-	return primaryString, logString, nil
+	return master, slave, nil
+}
+
+func buildDbString(dbIn db) string {
+	if isCorrectDB(dbIn) {
+		return ""
+	}
+	return dbIn.User + ":" + dbIn.Password + "@tcp(" + dbIn.Address + ":" + dbIn.Port + ")/" + dbIn.Name
+}
+
+func isCorrectDB(dbIn db) bool {
+	if dbIn.Address == "" || dbIn.User == "" || dbIn.Password == "" || dbIn.Port == "" || dbIn.Name == "" {
+		return false
+	}
+	return true
+}
+
+//LoadMysqlRoot return root password for master mysql database
+func LoadMysqlRoot() (string, error) {
+	conf, err := readConfig()
+	if err != nil {
+		return "", err
+	}
+	return conf.Database.Master.Password, nil
 }

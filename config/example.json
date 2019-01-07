@@ -41,9 +41,6 @@
         "linuxMaintenance" : false,
         "projects" : false,
         "gitWatchdog" : false
-    },
-    "services" : {
-        
     }
   }
   
