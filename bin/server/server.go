@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gorilla/mux"
 )
@@ -15,14 +16,31 @@ type Server struct {
 //SetupServer prepare new server structure
 func (s *Server) SetupServer(degradation chan int) error {
 	fmt.Println("Creating server")
-	out := Server{}
-	out.degradation = degradation
-
+	s.degradation = degradation
 	return nil
 }
 
 //StartServer create routes and execute http.listenAndServe
 func (s *Server) StartServer() error {
-
+	s.r = mux.NewRouter()
+	s.r.HandleFunc("/", homeHandler)
+	s.r.HandleFunc("/off", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("shutdown"))
+		s.degradation <- 0
+	})
+	s.r.HandleFunc("/hello", notImplemented)
+	http.Handle("/", s.r)
+	http.ListenAndServe(":1122", s.r)
 	return nil
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Hello at Server Home"))
+}
+
+func notImplemented(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("not implemented yet"))
 }
