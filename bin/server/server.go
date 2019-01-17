@@ -1,6 +1,8 @@
 package server
 
 import (
+	"github.com/michalnov/SovyGo/bin/server/modules/persistance"
+
 	"fmt"
 	"net/http"
 
@@ -11,19 +13,25 @@ import (
 type Server struct {
 	r           *mux.Router
 	degradation chan int
+	state       persistance.Persistance
 }
 
 //SetupServer prepare new server structure
 func (s *Server) SetupServer(degradation chan int) error {
 	fmt.Println("Creating server")
 	s.degradation = degradation
+	s.state = persistance.NewPersistance()
 	return nil
 }
 
 //StartServer create routes and execute http.listenAndServe
 func (s *Server) StartServer() error {
+
 	s.r = mux.NewRouter()
 	s.r.HandleFunc("/", homeHandler)
+	s.r.HandleFunc("/getKey", func(w http.ResponseWriter, r *http.Request) {
+
+	})
 	s.r.HandleFunc("/off", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("shutdown"))
