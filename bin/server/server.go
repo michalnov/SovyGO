@@ -1,7 +1,10 @@
 package server
 
 import (
+	"github.com/michalnov/SovyGo/bin/server/core"
 	"github.com/michalnov/SovyGo/bin/server/modules/persistance"
+
+	//"./core"
 
 	"fmt"
 	"net/http"
@@ -29,8 +32,8 @@ func (s *Server) StartServer() error {
 
 	s.r = mux.NewRouter()
 	s.r.HandleFunc("/", homeHandler)
-	s.r.HandleFunc("/getKey", func(w http.ResponseWriter, r *http.Request) {
-
+	s.r.HandleFunc("/key/new/", func(w http.ResponseWriter, r *http.Request) {
+		core.NewKey(&w, r, &s.state)
 	})
 	s.r.HandleFunc("/off", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)

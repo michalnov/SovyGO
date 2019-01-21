@@ -4,6 +4,7 @@ let parser = new DOMParser();
 const charset = "MNBVCXY123ASDFGHJKL654QWERTZUIOP789qwertzuioplkjhgfdsamnbvcxy";
 
 function setup() {
+    pki = forge.pki;
     state = new State();
     let data = state.loadState();
     if (data != false && data != null) {
@@ -41,7 +42,8 @@ function importPublicKey(data) {
             state.scrypt.serverPub = PublicFromXml(this.responseText);
 
         } else {
-            alert("failed to import key");
+            //alert("failed to import key");
+            reportState("failed to import RSA key");
         }
     };
     xhttp.open("GET", "/key/new/"+state.user.id, true);
@@ -61,6 +63,10 @@ function decryptAES(params) {
 
 function prepareAES(params) {
     
+}
+
+function reportState(params) {
+    document.getElementById("state").innerHTML = params;
 }
 
 function PublicToXml(data) {

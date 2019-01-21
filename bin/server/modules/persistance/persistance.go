@@ -15,3 +15,15 @@ func NewPersistance() Persistance {
 	out.state = make(map[string]authentication.Token, 0)
 	return out
 }
+
+func (p *Persistance) NewRecord(userID) {
+
+}
+
+func (p *Persistance) GetKey() {
+
+}
+
+func (p *Persistance) Find() {
+
+}
