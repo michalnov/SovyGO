@@ -20,18 +20,19 @@ function sendAESKey(data) {
             
         }
     };
-    xhttp.open("POST", "/key/register", true);
+    xhttp.open("POST", "/key/register/?id=", true);
     xhttp.send(data);
 }
 
 function pingSovy() {
     let xhttp = new XMLHttpRequest();
+    let data = 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
         
         }
     };
-    xhttp.open("POST", "/key/ping/"+state.user.id, true);
+    xhttp.open("POST", "/key/ping/?id="+state.user.id, true);
     xhttp.send();
 }
 
@@ -46,7 +47,7 @@ function importPublicKey(data) {
             reportState("failed to import RSA key");
         }
     };
-    xhttp.open("GET", "/key/new/"+state.user.id, true);
+    xhttp.open("GET", "/key/new/?id="+state.user.id, true);
     xhttp.send(); 
 }
 function encryptRSA(data) {
