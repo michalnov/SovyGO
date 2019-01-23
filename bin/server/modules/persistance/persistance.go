@@ -2,6 +2,7 @@ package persistance
 
 import (
 	"github.com/michalnov/SovyGo/bin/server/modules/authentication"
+	a "github.com/michalnov/SovyGo/bin/server/modules/authentication"
 )
 
 //Persistance struct
@@ -16,14 +17,20 @@ func NewPersistance() Persistance {
 	return out
 }
 
-func (p *Persistance) NewRecord(userID) {
+//NewRecord create new Token in Persistance map
+func (p *Persistance) NewRecord(sessionID string) {
 
+	record := a.NewToken()
+	p.state[sessionID] = record
 }
 
-func (p *Persistance) GetKey() {
+//GetKey returns pem form of public key
+func (p *Persistance) GetKey(sessionID string) (string, error) {
 
+	return "", nil
 }
 
-func (p *Persistance) Find() {
+//SetSymmetricKey set key (from client) for symmetric encryption
+func (p *Persistance) SetSymmetricKey(sessionID string, key string) {
 
 }

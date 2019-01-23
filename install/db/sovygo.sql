@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `sovygo`.`user` (
   `salt` VARCHAR(16) NOT NULL,
   `password` VARCHAR(256) NOT NULL,
   `auth` VARCHAR(45) NULL,
-  `created` DATETIME NULL DEFAULT DEFAULT CURRENT_TIMESTAMP,
+  `created` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`iduser`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC))
 ENGINE = InnoDB;
@@ -38,7 +38,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `sovygo`.`lastlogin` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `userid` INT NULL,
-  `date` DATETIME NULL DEFAULT ON UPDATE CURRENT_TIMESTAMP,
+  `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `succes` CHAR NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_lastlogin_1_idx` (`userid` ASC),
@@ -56,7 +56,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `sovygo`.`loginincident` (
   `idloginincident` INT NOT NULL AUTO_INCREMENT,
   `userid` INT NOT NULL,
-  `date` DATETIME NOT NULL DEFAULT DEFAULT CURRENT_TIMESTAMP,
+  `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip` CHAR(39) NULL,
   PRIMARY KEY (`idloginincident`),
   UNIQUE INDEX `idloginincident_UNIQUE` (`idloginincident` ASC))
@@ -66,3 +66,7 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- --------------------------------------------------
+-- GRANT ALL PRIVILEGES ON sovygo.* TO ''@'localhost' IDENTIFIED BY '';
+-- --------------------------------------------------
