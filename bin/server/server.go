@@ -35,7 +35,7 @@ func (s *Server) StartServer() error {
 	s.r.HandleFunc("/key/new/", func(w http.ResponseWriter, r *http.Request) {
 		core.NewKey(&w, r, &s.state)
 	})
-	s.r.HandleFunc("/off", func(w http.ResponseWriter, r *http.Request) {
+	s.r.HandleFunc("/off/1234", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("shutdown"))
 		s.degradation <- 0
