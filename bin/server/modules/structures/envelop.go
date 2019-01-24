@@ -24,6 +24,6 @@ func (e *Envelop) FromEnvelop(r *http.Request) error {
 
 //ToEnvelop pack structure to response
 func (e *Envelop) ToEnvelop() ([]byte, error) {
-	out, err := xml.MarshalIndent(e, "	", "		")
+	out, err := xml.MarshalIndent(&e, "	", "		")
 	return out, err
 }
