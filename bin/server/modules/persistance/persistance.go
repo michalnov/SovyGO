@@ -18,10 +18,10 @@ func NewPersistance() Persistance {
 }
 
 //NewRecord create new Token in Persistance map
-func (p *Persistance) NewRecord(sessionID string) []byte {
+func (p *Persistance) NewRecord(sessionID string) string {
 	record := a.NewToken()
 	p.state[sessionID] = record
-	return p.state[sessionID].ServerPublicPem
+	return p.state[sessionID].ServerPem
 }
 
 //GetKey returns pem form of public key

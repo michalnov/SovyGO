@@ -11,6 +11,7 @@ type Envelop struct {
 	XMLName    xml.Name `xml:"Data"`
 	Encryption bool     `xml:"Head>encryption"`
 	Body       []byte   `xml:"Body"`
+	Key        string   `xml:"Key,omitempty"`
 	CHeck      string   `xml:"Chech,omitempty"`
 }
 
