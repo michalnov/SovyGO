@@ -2,13 +2,12 @@ package authentication
 
 import (
 	"crypto/cipher"
+	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
 	"time"
-
-	"github.com/michalnov/SovyGo/bin/server/modules/scrypto"
 )
 
 //Token structure used as storage for authentication data
@@ -19,7 +18,7 @@ type Token struct {
 	ServerPublic    rsa.PublicKey
 	ServerPublicPem []byte
 	ServerPem       string
-	ServerPrivate   rsa.PrivateKey
+	ServerPrivate   *rsa.PrivateKey
 	SymmetricKey    []byte
 	DesCipher       cipher.Block
 	AesCipher       cipher.Block
@@ -34,7 +33,9 @@ func NewToken() Token {
 	out.Revision = out.Created
 	out.Autheticated = false
 	var key rsa.PublicKey
-	err := scrypto.NewKeypair(&out.ServerPrivate)
+	//err := scrypto.NewKeypair(&out.ServerPrivate)
+	priv, err := rsa.GenerateKey(rand.Reader, 2048)
+	out.ServerPrivate = priv
 	if err != nil {
 		panic(err)
 	}
@@ -43,7 +44,7 @@ func NewToken() Token {
 	out.ServerPublicPem = pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "RSA PUBLIC KEY",
-			Bytes: x509.MarshalPKCS1PublicKey(&out.ServerPrivate.PublicKey),
+			Bytes: x509.MarshalPKCS1PublicKey(&priv.PublicKey),
 		},
 	)
 	out.ServerPem = string(pem.EncodeToMemory(
