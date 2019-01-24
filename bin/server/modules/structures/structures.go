@@ -10,6 +10,7 @@ type LoginRequest struct {
 	SessionID string `json:"sessionid,omitempty"`
 	Username  string `json:"username,omitempty"`
 	Password  string `json:"password,omitempty"`
+	Salt      string
 }
 
 //LoginResponse res
@@ -23,6 +24,7 @@ type RegisterRequest struct {
 	Email    string `json:"email,omitempty"`
 	Password string `json:"password,omitempty"`
 	Class    string `json:"class,omitempty"`
+	Salt     string
 }
 
 //SessionRequest req
