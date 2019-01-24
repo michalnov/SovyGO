@@ -5,6 +5,7 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"fmt"
 	"time"
 
 	"github.com/michalnov/SovyGo/bin/server/modules/scrypto"
@@ -17,6 +18,7 @@ type Token struct {
 	ClientPublic    rsa.PublicKey
 	ServerPublic    rsa.PublicKey
 	ServerPublicPem []byte
+	ServerPem       string
 	ServerPrivate   rsa.PrivateKey
 	SymmetricKey    []byte
 	DesCipher       cipher.Block
@@ -41,8 +43,15 @@ func NewToken() Token {
 	out.ServerPublicPem = pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "RSA PUBLIC KEY",
-			Bytes: x509.MarshalPKCS1PublicKey(&out.ServerPublic),
+			Bytes: x509.MarshalPKCS1PublicKey(&out.ServerPrivate.PublicKey),
 		},
 	)
+	out.ServerPem = string(pem.EncodeToMemory(
+		&pem.Block{
+			Type:  "RSA PUBLIC KEY",
+			Bytes: x509.MarshalPKCS1PublicKey(&out.ServerPrivate.PublicKey),
+		},
+	))
+	fmt.Println(out.ServerPem)
 	return out
 }
