@@ -31,6 +31,7 @@ func (s *Server) StartServer() error {
 	s.r = mux.NewRouter()
 	s.r.HandleFunc("/", homeHandler)
 	s.r.HandleFunc("/key/new/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("something")
 		core.NewKey(w, r, &s.state)
 	})
 	s.r.HandleFunc("/off/1234", func(w http.ResponseWriter, r *http.Request) {
