@@ -9,11 +9,8 @@ import (
 
 //LoginHandler handle proces of user login
 func LoginHandler(w *http.ResponseWriter, r *http.Request, p *persistance.Persistance) {
-	var req s.LoginRequest
-	req, err := s.DecodeLogin(r)
-	if err != nil {
-
-		panic(err)
-	}
+	var env s.Envelop
+	err := env.FromEnvelop(r)
+	checkErr(err)
 
 }

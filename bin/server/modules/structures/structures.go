@@ -2,7 +2,6 @@ package structures
 
 import (
 	"encoding/json"
-	"net/http"
 )
 
 //LoginRequest req
@@ -33,15 +32,13 @@ type SessionRequest struct {
 }
 
 //DecodeLogin method for decoding structure from request
-func DecodeLogin(r *http.Request) (LoginRequest, error) {
-	var out LoginRequest
-	err := json.NewDecoder(r.Body).Decode(&out)
-	return out, err
+func (l *LoginRequest) DecodeLogin(data []byte) error {
+	err := json.Unmarshal(data, l)
+	return err
 }
 
 //DecodeSession method for decoding session structure from request
-func DecodeSession(r *http.Request) (SessionRequest, error) {
-	var out SessionRequest
-	err := json.NewDecoder(r.Body).Decode(&out)
-	return out, err
+func (l *SessionRequest) DecodeSession(data []byte) error {
+	err := json.Unmarshal(data, l)
+	return err
 }
