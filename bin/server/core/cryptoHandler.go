@@ -27,7 +27,7 @@ func NewKey(w http.ResponseWriter, r *http.Request, p *persistance.Persistance) 
 	env.Body = p.NewRecord(session.SessionID)
 	env.Encryption = false
 	w.WriteHeader(http.StatusOK)
-	resp, err := env.ToEnvelop()
+	resp, err := env.ToEnvelop(env)
 	fmt.Println("3")
 	checkErr(err)
 	fmt.Println(string(resp))
