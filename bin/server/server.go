@@ -4,8 +4,6 @@ import (
 	"github.com/michalnov/SovyGo/bin/server/core"
 	"github.com/michalnov/SovyGo/bin/server/modules/persistance"
 
-	//"./core"
-
 	"fmt"
 	"net/http"
 
