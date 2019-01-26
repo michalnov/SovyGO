@@ -40,8 +40,10 @@ function importPublicKey(data) {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            state.scrypt.serverPub = PublicFromXml(this.responseText);
-
+            var env = new Envelop;
+            env.fromEnvelop(this.responseText);
+            state.scrypt.serverPub = pki.publicKeyFromPem(env.key);
+            reportState("imported");
         } else {
             //alert("failed to import key");
             reportState("failed to import RSA key");
@@ -125,7 +127,7 @@ class State {
                 keys : {
                     //clientPub : pki.publicKeyToPem(this.scrypt.keyClient.publicKey),
                     //clientPri : pki.privateKeyToPem(this.scrypt.keyClient.privateKey),
-                    serverPub : pki.publicKeyToPem(this.scrypt.keyServer),
+                    serverPub : pki.publicKeyToPem(this.scrypt.serverPub),
                     symmetricKey : this.scrypt.symmetricKey,
                     symmetricIV : this.scrypt.symmetricIV
                 }
@@ -151,13 +153,13 @@ class User {
 class SCrypt {
     constructor(){
         //this.keyClient = forge.rsa.generateKeyPair();
-        this.keyServer = null;
+        this.serverPub = null;
         this.symmetricKey = null;
         this.symmetricIV = null;
     }
 
     setServerKey(data) {
-        this.keyServer = pki.publicKeyFromPem(data);
+        this.serverPub = pki.publicKeyFromPem(data);
     }
 
 }
@@ -173,6 +175,7 @@ function aplyState(data) {
 
 function newState(params) {
     state.user.id = getRandomString(16);
+    state.scrypt.symmetricKey = forge.random.getBytesSync(32);
     importPublicKey();
 }
 setup();
@@ -180,3 +183,59 @@ setup();
 setInterval(function(){
     pingSovy();
 } ,250000);
+
+class Envelop{
+    constructor(){
+        this.encryption = true;
+        this.body = {};
+        this.key = "";
+        this.check = "";
+    }
+
+    toEnvelop(params) {
+        this.encryption = false;
+    
+    }
+
+    encryptToEnvelop(params) {
+        this.encryption = true;
+        this.key = forge.random.getBytesSync(16);
+        let cipher = forge.cipher.createCipher('AES-CBC', state.scrypt.symmetricKey);
+        cipher.start({iv: this.key});
+        cipher.update(forge.util.createBuffer(params));
+        cipher.finish();
+        this.body = cipher.output;
+    }
+
+    RSAToEnvelop(params) {
+        this.encryption = true;
+        this.body = state.scrypt.serverPub.encrypt(params);
+    }
+
+    fromEnvelop(params) {
+        xmlDoc = parser.parseFromString(params, "text/xml");
+        this.encryption = xmlDoc.getElementsByTagName("encryption");
+        this.body = xmlDoc.getElementsByTagName("Body");
+        this.key = xmlDoc.getElementsByTagName("Key");
+        this.check = xmlDoc.getElementsByTagName("Check");
+        if (this.encryption) {
+            let decipher = forge.cipher.createDecipher('AES-CBC', state.scrypt.symmetricKey);
+            decipher.start({iv: this.key});
+            decipher.update(this.body);
+            this.body = decipher.finish();
+        }
+        return this.body;
+    }
+
+    buildEnvelop(){
+        let out = "<Data>"+
+            "<Head>"+
+                "<encryption>"+this.encryption+"</Encryption>"
+            +"</Head>"
+            "<Body>"+this.body+"</Body>"+
+            "<Key>"+this.key+"</Key>"+
+            "<Check>"+this.check+"</Check>"
+        +"</Data>";
+        return out;
+    }
+}
