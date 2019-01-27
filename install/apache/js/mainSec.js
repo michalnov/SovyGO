@@ -181,7 +181,6 @@ function newState(params) {
     state.scrypt.symmetricKey = forge.random.getBytesSync(32);
     importPublicKey();
 }
-setup();
 
 setInterval(function(){
     pingSovy();
@@ -247,3 +246,6 @@ class Envelop{
         return out;
     }
 }
+
+
+setup(); //leave on the end of file. if not it will cause lexical error

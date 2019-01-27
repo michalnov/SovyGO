@@ -41,5 +41,5 @@ func ImportAESKey(w http.ResponseWriter, r *http.Request, p *persistance.Persist
 	err := env.FromEnvelop(r)
 	fmt.Println("1")
 	checkErr(err)
-	data := p.SetSymmetricKey(env.SessionID, env.Body)
+	//data := p.SetSymmetricKey(env.SessionID, env.Body)
 }
