@@ -31,6 +31,6 @@ func (p *Persistance) GetKey(sessionID string) (string, error) {
 }
 
 //SetSymmetricKey set key (from client) for symmetric encryption
-func (p *Persistance) SetSymmetricKey(sessionID string, key string) {
+func (p *Persistance) SetSymmetricKey(sessionID string, key []byte) {
 
 }

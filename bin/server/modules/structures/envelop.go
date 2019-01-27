@@ -10,6 +10,7 @@ import (
 type Envelop struct {
 	XMLName    xml.Name `xml:"Data"`
 	Encryption bool     `xml:"Head>encryption"`
+	SessionID  string   `xml:"Head>session"`
 	Body       []byte   `xml:"Body"`
 	Key        []byte   `xml:"Key,omitempty"`
 	CHeck      string   `xml:"Chech,omitempty"`

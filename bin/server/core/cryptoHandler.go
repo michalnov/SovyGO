@@ -31,5 +31,15 @@ func NewKey(w http.ResponseWriter, r *http.Request, p *persistance.Persistance) 
 	fmt.Println("3")
 	checkErr(err)
 	fmt.Println(string(resp))
+	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, string(resp))
+}
+
+//ImportAESKey recieve encrypt and setup new symmetric key fro session
+func ImportAESKey(w http.ResponseWriter, r *http.Request, p *persistance.Persistance) {
+	var env s.Envelop
+	err := env.FromEnvelop(r)
+	fmt.Println("1")
+	checkErr(err)
+	data := p.SetSymmetricKey(env.SessionID, env.Body)
 }

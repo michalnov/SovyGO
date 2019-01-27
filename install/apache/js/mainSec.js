@@ -14,29 +14,44 @@ function setup() {
     }
 }
 function sendAESKey(data) {
+    let toSend = new Envelop;
+    //toSend.body = state.scrypt.symmetricKey;
+    toSend.RSAToEnvelop(state.scrypt.symmetricKey)
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
+            var env = new Envelop;
+            env.fromEnvelop(this.responseText);
+            console.log(env.body);
             
         }
     };
-    xhttp.open("POST", "/key/register/?id=", true);
-    xhttp.send(data);
+    xhttp.open("POST", "/key/aes/", true);
+    console.log(toSend.buildEnvelop());
+    xhttp.send(toSend.buildEnvelop());
 }
 
 function pingSovy() {
     let xhttp = new XMLHttpRequest();
-    let data = 
+    let data = new Envelop;
+    data.encryptToEnvelop("ping")
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
         
+        } else if (this.readyState == 4 && this.status == 403) {
+            state.clearState();
+            state = null;
+            setup();
         }
     };
-    xhttp.open("POST", "/key/ping/?id="+state.user.id, true);
-    xhttp.send();
+    xhttp.open("POST", "/key/ping/", true);
+    console.log(data.buildEnvelop());
+    xhttp.send(data.buildEnvelop());
 }
 
 function importPublicKey(data) {
+    let toSend = new Envelop;
+    toSend.body = JSON.stringify({sessionid : state.user.id});
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -44,28 +59,16 @@ function importPublicKey(data) {
             env.fromEnvelop(this.responseText);
             state.scrypt.serverPub = pki.publicKeyFromPem(env.key);
             reportState("imported");
+            sendAESKey();
         } else {
             //alert("failed to import key");
             reportState("failed to import RSA key");
         }
     };
-    xhttp.open("GET", "/key/new/?id="+state.user.id, true);
-    xhttp.send(); 
-}
-function encryptRSA(data) {
-    return state.scrypt.serverPub.encript(data);
-}
-
-function encryptAES(params) {
+    xhttp.open("POST", "/key/new/", true);
+    console.log(toSend.buildEnvelop());
     
-}
-
-function decryptAES(params) {
-    
-}
-
-function prepareAES(params) {
-    
+    xhttp.send(toSend.buildEnvelop()); 
 }
 
 function reportState(params) {
@@ -88,7 +91,7 @@ function getRandomString(length) {
     let out = "";
     let x = 0;
     for (let i = 0; i < length; i++) {
-        out = out + charset[Math.random(charset.length)];
+        out = out + charset[Math.floor(Math.random()*charset.length)];
     }
     return out;
 }
@@ -187,6 +190,7 @@ setInterval(function(){
 class Envelop{
     constructor(){
         this.encryption = true;
+        this.sessionid = state.user.id;
         this.body = {};
         this.key = "";
         this.check = "";
@@ -209,7 +213,11 @@ class Envelop{
 
     RSAToEnvelop(params) {
         this.encryption = true;
-        this.body = state.scrypt.serverPub.encrypt(params);
+        if (params == null) {
+            this.body = state.scrypt.serverPub.encrypt(this.body);
+        } else {
+            this.body = state.scrypt.serverPub.encrypt(params);
+        }
     }
 
     fromEnvelop(params) {
