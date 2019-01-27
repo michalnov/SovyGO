@@ -26,7 +26,7 @@ function sendAESKey(data) {
             
         }
     };
-    xhttp.open("POST", "/key/aes/", true);
+    xhttp.open("POST", "http://itsovy.sk:1122/key/aes/", true);
     console.log(toSend.buildEnvelop());
     xhttp.send(toSend.buildEnvelop());
 }
@@ -44,7 +44,7 @@ function pingSovy() {
             setup();
         }
     };
-    xhttp.open("POST", "/key/ping/", true);
+    xhttp.open("POST", "http://itsovy.sk:1122/key/ping/", true);
     console.log(data.buildEnvelop());
     xhttp.send(data.buildEnvelop());
 }
@@ -53,10 +53,11 @@ function importPublicKey(data) {
     let toSend = new Envelop;
     toSend.encryption = false;
     toSend.body = JSON.stringify({sessionid : state.user.id});
+    let req = toSend.buildEnvelop();
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            var env = new Envelop;
+            let env = new Envelop;
             env.fromEnvelop(this.responseText);
             state.scrypt.serverPub = pki.publicKeyFromPem(env.key);
             reportState("imported");
@@ -66,10 +67,9 @@ function importPublicKey(data) {
             reportState("failed to import RSA key");
         }
     };
-    xhttp.open("POST", "/key/new/", true);
-    console.log(toSend.buildEnvelop());
-    
-    xhttp.send(toSend.buildEnvelop()); 
+    xhttp.open("POST", "http://itsovy.sk:1122/key/new/", true);
+    console.log(req);
+    xhttp.send(req); 
 }
 
 function reportState(params) {
