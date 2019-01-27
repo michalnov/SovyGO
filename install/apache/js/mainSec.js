@@ -51,6 +51,7 @@ function pingSovy() {
 
 function importPublicKey(data) {
     let toSend = new Envelop;
+    toSend.encryption = false;
     toSend.body = JSON.stringify({sessionid : state.user.id});
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -237,7 +238,8 @@ class Envelop{
     buildEnvelop(){
         let out = "<Data>"+
             "\n\t<Head>"+
-                "\n\t\t<encryption>"+this.encryption+"</Encryption>"+
+            "\n\t\t<encryption>"+this.encryption+"</encryption>"+
+            "\n\t\t<session>"+this.sessionid+"</session>"+
             "\n\t</Head>"+
             "\n\t<Body>"+this.body+"</Body>"+
             "\n\t<Key>"+this.key+"</Key>"+
