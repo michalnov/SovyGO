@@ -236,13 +236,13 @@ class Envelop{
 
     buildEnvelop(){
         let out = "<Data>"+
-            "<Head>"+
-                "<encryption>"+this.encryption+"</Encryption>"
-            +"</Head>"
-            "<Body>"+this.body+"</Body>"+
-            "<Key>"+this.key+"</Key>"+
-            "<Check>"+this.check+"</Check>"
-        +"</Data>";
+            "\n\t<Head>"+
+                "\n\t\t<encryption>"+this.encryption+"</Encryption>"+
+            "\n\t</Head>"+
+            "\n\t<Body>"+this.body+"</Body>"+
+            "\n\t<Key>"+this.key+"</Key>"+
+            "\n\t<Check>"+this.check+"</Check>"+
+        "\n</Data>";
         return out;
     }
 }
