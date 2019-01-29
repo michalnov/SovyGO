@@ -59,11 +59,7 @@ function importPublicKey(data) {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            let env = new Envelop;
-            env.encryption = false;
-            env.fromEnvelop(this.responseText);
             console.log(this.responseText);
-            
             let x = String(this.responseText);
             x = x.split("&#xA;").join("\n");
             console.log(x);
