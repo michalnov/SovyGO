@@ -11,7 +11,10 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 )
+
+var upgrader = websocket.Upgrader{}
 
 //Server structure that hold all parts of application
 type Server struct {
@@ -32,7 +35,9 @@ func (s *Server) SetupServer(degradation chan int) error {
 func (s *Server) StartServer() error {
 
 	s.r = mux.NewRouter()
-	s.r.HandleFunc("/", homeHandler)
+	s.r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "web_files/test.html")
+	})
 	//s.r.HandleFunc()
 	s.r.HandleFunc("/key/new/", func(w http.ResponseWriter, r *http.Request) {
 		core.NewKey(w, r, &s.state)
@@ -49,6 +54,14 @@ func (s *Server) StartServer() error {
 	http.Handle("/", s.r)
 	log.Fatal(http.ListenAndServe(":1122", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(s.r)))
 	return nil
+}
+
+func (s *Server) Alternate() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "web_files/test.html")
+	})
+
+	http.ListenAndServe(":1122", nil)
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {

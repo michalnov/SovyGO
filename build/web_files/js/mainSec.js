@@ -219,7 +219,7 @@ class Envelop{
     RSAToEnvelop(params) {
         this.encryption = true;
         if (params == null) {
-            this.body = state.scrypt.serverPub.encrypt(this.body);
+            this.body = atob(state.scrypt.serverPub.encrypt(this.body));
         } else {
             this.body = state.scrypt.serverPub.encrypt(params);
         }
@@ -241,7 +241,9 @@ class Envelop{
     }
 
     buildEnvelop(){
-        let out = "<Data>"+
+        let out =  `
+            
+        `;"<Data>"+
             "\n\t<Head>"+
             "\n\t\t<encryption>"+this.encryption+"</encryption>"+
             "\n\t\t<session>"+this.sessionid+"</session>"+
