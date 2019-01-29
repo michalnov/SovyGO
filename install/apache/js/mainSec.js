@@ -229,7 +229,7 @@ class Envelop{
         this.body = xmlDoc.getElementsByTagName("Body");
         this.key = xmlDoc.getElementsByTagName("Key");
         this.check = xmlDoc.getElementsByTagName("Check");
-        if (this.encryption) {
+        if (this.encryption == true) {
             let decipher = forge.cipher.createDecipher('AES-CBC', state.scrypt.symmetricKey);
             decipher.start({iv: this.key});
             decipher.update(this.body);
