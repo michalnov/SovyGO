@@ -56,6 +56,7 @@ func (s *Server) StartServer() error {
 	return nil
 }
 
+//Alternate test of websocket connection
 func (s *Server) Alternate() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "web_files/test.html")
