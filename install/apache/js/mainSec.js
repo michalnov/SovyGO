@@ -63,7 +63,7 @@ function importPublicKey(data) {
             env.encryption = false;
             env.fromEnvelop(this.responseText);
 
-            state.scrypt.serverPub = pki.publicKeyFromPem(env.keysplit("&#xA;").join("\n"));
+            state.scrypt.serverPub = pki.publicKeyFromPem(env.key.split("&#xA;").join("\n"));
             reportState("imported");
             sendAESKey();
         } else {
