@@ -61,7 +61,7 @@ function importPublicKey(data) {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.responseText);
             let x = String(this.responseText);
-            x = x.split("&#xA;").join("\n");
+            x = x.split("&#xA;").join("");
             console.log(x);
             state.scrypt.serverPub = pki.publicKeyFromPem();
             reportState("imported");
