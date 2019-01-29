@@ -223,7 +223,7 @@ class Envelop{
     }
 
     fromEnvelop(params) {
-        xmlDoc = parser.parseFromString(params, "text/xml");
+        let xmlDoc = parser.parseFromString(params, "text/xml");
         this.encryption = xmlDoc.getElementsByTagName("encryption");
         this.body = xmlDoc.getElementsByTagName("Body");
         this.key = xmlDoc.getElementsByTagName("Key");
