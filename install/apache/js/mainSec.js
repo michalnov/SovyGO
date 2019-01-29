@@ -60,6 +60,7 @@ function importPublicKey(data) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             let env = new Envelop;
+            env.encryption = false;
             env.fromEnvelop(this.responseText);
             state.scrypt.serverPub = pki.publicKeyFromPem(env.key);
             reportState("imported");
