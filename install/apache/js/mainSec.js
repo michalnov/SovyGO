@@ -65,7 +65,7 @@ function importPublicKey(data) {
             x = x.split(" ").join("");
             x = x.split("\n").join("");
             console.log(x);
-            state.scrypt.serverPub = pki.publicKeyFromPem();
+            state.scrypt.serverPub = pki.publicKeyFromPem(x);
             reportState("imported");
             sendAESKey();
         } else {
