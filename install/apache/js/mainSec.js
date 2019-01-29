@@ -64,7 +64,7 @@ function importPublicKey(data) {
             env.fromEnvelop(this.responseText);
             console.log(this.responseText);
             
-            let x = String(env.key);
+            let x = String(this.responseText);
             x = x.split("&#xA;").join("\n");
             console.log(x);
             state.scrypt.serverPub = pki.publicKeyFromPem();
