@@ -62,6 +62,8 @@ function importPublicKey(data) {
             let env = new Envelop;
             env.encryption = false;
             env.fromEnvelop(this.responseText);
+            console.log(this.responseText);
+            
             let x = String(env.key);
             x = x.split("&#xA;").join("\n");
             console.log(x);
