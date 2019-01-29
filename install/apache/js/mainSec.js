@@ -17,6 +17,7 @@ function sendAESKey(data) {
     let toSend = new Envelop;
     //toSend.body = state.scrypt.symmetricKey;
     toSend.RSAToEnvelop(state.scrypt.symmetricKey)
+    let req = toSend.buildEnvelop();
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -27,14 +28,15 @@ function sendAESKey(data) {
         }
     };
     xhttp.open("POST", "http://itsovy.sk:1122/key/aes/", true);
-    console.log(toSend.buildEnvelop());
-    xhttp.send(toSend.buildEnvelop());
+    console.log(req);
+    xhttp.send(req);
 }
 
 function pingSovy() {
     let xhttp = new XMLHttpRequest();
     let data = new Envelop;
     data.encryptToEnvelop("ping")
+    let req = data.buildEnvelop();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
         
@@ -45,8 +47,8 @@ function pingSovy() {
         }
     };
     xhttp.open("POST", "http://itsovy.sk:1122/key/ping/", true);
-    console.log(data.buildEnvelop());
-    xhttp.send(data.buildEnvelop());
+    console.log(req);
+    xhttp.send(req);
 }
 
 function importPublicKey(data) {
