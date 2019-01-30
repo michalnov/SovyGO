@@ -57,7 +57,7 @@ func (s *Server) StartServer() error {
 	})
 	s.r.HandleFunc("/hello", notImplemented)
 	http.Handle("/", s.r)
-	log.Fatal(http.ListenAndServe(":1122", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(s.r)))
+	log.Fatal(http.ListenAndServe(s.core.Config.Server.Port, handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(s.r)))
 	return nil
 }
 

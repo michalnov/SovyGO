@@ -2,3 +2,4 @@ config/config.json
 *.o
 *.exe
 build/server
+build/s*
