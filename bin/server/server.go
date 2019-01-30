@@ -21,6 +21,7 @@ type Server struct {
 	r           *mux.Router
 	degradation chan int
 	state       persistance.Persistance
+	core        core.Core
 }
 
 //SetupServer prepare new server structure
@@ -33,7 +34,11 @@ func (s *Server) SetupServer(degradation chan int) error {
 
 //StartServer create routes and execute http.listenAndServe
 func (s *Server) StartServer() error {
-
+	var err error
+	s.core, err = core.NewCore()
+	if err != nil {
+		return err
+	}
 	s.r = mux.NewRouter()
 	s.r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "web_files/test.html")
@@ -56,18 +61,9 @@ func (s *Server) StartServer() error {
 	return nil
 }
 
-//Alternate test of websocket connection
-func (s *Server) Alternate() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "web_files/test.html")
-	})
-
-	http.ListenAndServe(":1122", nil)
-}
-
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Hello at Server Home"))
+	http.ServeFile(w, r, "web_files/test.html")
 }
 
 func notImplemented(w http.ResponseWriter, r *http.Request) {
