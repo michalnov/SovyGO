@@ -1,6 +1,7 @@
 let state;
 let pki;
 let parser = new DOMParser();
+let host = "http://itsovy.sk:1122";
 const charset = "MNBVCXY123ASDFGHJKL654QWERTZUIOP789qwertzuioplkjhgfdsamnbvcxy";
 
 function setup() {
@@ -27,7 +28,7 @@ function sendAESKey(data) {
             
         }
     };
-    xhttp.open("POST", "http://itsovy.sk:1122/key/aes/", true);
+    xhttp.open("POST", host+"/key/aes/", true);
     console.log(req);
     xhttp.send(req);
 }
@@ -46,7 +47,7 @@ function pingSovy() {
             setup();
         }
     };
-    xhttp.open("POST", "http://itsovy.sk:1122/key/ping/", true);
+    xhttp.open("POST", host+"/key/ping/", true);
     console.log(req);
     xhttp.send(req);
 }
@@ -72,7 +73,7 @@ function importPublicKey(data) {
             reportState("failed to import RSA key");
         }
     };
-    xhttp.open("POST", "http://itsovy.sk:1122/key/new/", true);
+    xhttp.open("POST", host+"/key/new/", true);
     console.log(req);
     xhttp.send(req); 
 }

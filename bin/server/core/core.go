@@ -75,3 +75,18 @@ func laodTemplate(path string) (*template.Template, error) {
 func (c *Core) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	c.Templates["index"].Execute(w, nil)
 }
+
+//LoginHandler serve main htm page
+func (c *Core) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	c.Templates["login"].Execute(w, nil)
+}
+
+//RegisterHandler serve main htm page
+func (c *Core) RegisterHandler(w http.ResponseWriter, r *http.Request) {
+	c.Templates["Register"].Execute(w, nil)
+}
+
+//TestHandler serve main htm page
+func (c *Core) TestHandler(w http.ResponseWriter, r *http.Request) {
+	c.Templates["test"].Execute(w, nil)
+}
